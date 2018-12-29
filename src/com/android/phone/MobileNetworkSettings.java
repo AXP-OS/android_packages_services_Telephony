@@ -1318,8 +1318,11 @@ public class MobileNetworkSettings extends Activity  {
                     int modemNetworkMode;
                     // if new mode is invalid ignore it
                     switch (buttonNetworkMode) {
+                        case Phone.NT_MODE_WCDMA_ONLY:
                         case Phone.NT_MODE_WCDMA_PREF:
                         case Phone.NT_MODE_GSM_ONLY:
+                        case Phone.NT_MODE_LTE_ONLY:
+                        case Phone.NT_MODE_LTE_WCDMA:
                         case Phone.NT_MODE_LTE_GSM_WCDMA:
                         case Phone.NT_MODE_LTE_CDMA_EVDO_GSM_WCDMA:
                         case Phone.NT_MODE_CDMA:
@@ -1548,7 +1551,7 @@ public class MobileNetworkSettings extends Activity  {
                     break;
                 case Phone.NT_MODE_LTE_ONLY:
                     mButtonPreferredNetworkMode.setSummary(
-                            R.string.preferred_network_mode_lte_summary);
+                            R.string.preferred_network_mode_lte_only_summary);
                     break;
                 case Phone.NT_MODE_LTE_TDSCDMA_GSM:
                     mButtonPreferredNetworkMode.setSummary(
@@ -1595,11 +1598,11 @@ public class MobileNetworkSettings extends Activity  {
                     break;
                 case Phone.NT_MODE_LTE_TDSCDMA_WCDMA:
                     mButtonPreferredNetworkMode.setSummary(
-                            R.string.preferred_network_mode_lte_tdscdma_wcdma_summary);
+                            R.string.preferred_network_mode_lte_tdscdma_wcdma_only_summary);
                     break;
                 case Phone.NT_MODE_LTE_WCDMA:
                     mButtonPreferredNetworkMode.setSummary(
-                            R.string.preferred_network_mode_lte_wcdma_summary);
+                            R.string.preferred_network_mode_lte_wcdma_only_summary);
                     break;
                 default:
                     mButtonPreferredNetworkMode.setSummary(
@@ -1621,6 +1624,12 @@ public class MobileNetworkSettings extends Activity  {
                     mButtonEnabledNetworks.setSummary(R.string.network_3G);
                     break;
                 case Phone.NT_MODE_WCDMA_ONLY:
+                    if (!mIsGlobalCdma) {
+                        mButtonEnabledNetworks.setSummary(R.string.network_3G_only);
+                    } else {
+                        mButtonEnabledNetworks.setSummary(R.string.network_global);
+                    }
+                    break;
                 case Phone.NT_MODE_GSM_UMTS:
                 case Phone.NT_MODE_WCDMA_PREF:
                     if (!mIsGlobalCdma) {
@@ -1644,11 +1653,25 @@ public class MobileNetworkSettings extends Activity  {
                         controlGsmOptions(true);
                         break;
                     }
-                case Phone.NT_MODE_LTE_ONLY:
-                case Phone.NT_MODE_LTE_WCDMA:
                     if (!mIsGlobalCdma) {
                         mButtonEnabledNetworks.setSummary((mShow4GForLTE == true)
                                 ? R.string.network_4G : R.string.network_lte);
+                    } else {
+                        mButtonEnabledNetworks.setSummary(R.string.network_global);
+                    }
+                    break;
+                case Phone.NT_MODE_LTE_ONLY:
+                    if (!mIsGlobalCdma) {
+                        mButtonEnabledNetworks.setSummary((mShow4GForLTE == true)
+                                ? R.string.network_4G_only : R.string.network_lte_only);
+                    } else {
+                        mButtonEnabledNetworks.setSummary(R.string.network_global);
+                    }
+                    break;
+                case Phone.NT_MODE_LTE_WCDMA:
+                    if (!mIsGlobalCdma) {
+                        mButtonEnabledNetworks.setSummary((mShow4GForLTE == true)
+                                ? R.string.network_3G_4G_only : R.string.network_3G_lte_only);
                     } else {
                         mButtonEnabledNetworks.setSummary(R.string.network_global);
                     }
