@@ -41,6 +41,7 @@ import android.os.PersistableBundle;
 import android.os.Process;
 import android.os.RemoteException;
 import android.os.ResultReceiver;
+import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.preference.PreferenceManager;
 import android.service.carrier.CarrierIdentifier;
@@ -645,8 +646,14 @@ public class CarrierConfigLoader extends ICarrierConfigLoader.Stub {
      */
     private CarrierConfigLoader(Context context) {
         mContext = context;
-        mPlatformCarrierConfigPackage =
-                mContext.getString(R.string.platform_carrier_config_package);
+        if (SystemProperties.getBoolean("persist.security.carrierconfig2", false)) {
+            mPlatformCarrierConfigPackage = "app.grapheneos.carrierconfig2";
+        } else {
+            //mPlatformCarrierConfigPackage = "com.android.carrierconfig";
+            mPlatformCarrierConfigPackage =
+                    mContext.getString(R.string.platform_carrier_config_package);
+        }
+        Log.d("CarrierConfigPackageOverride", "Provider: " + mPlatformCarrierConfigPackage);
         mHandler = new ConfigHandler();
 
         IntentFilter bootFilter = new IntentFilter();
